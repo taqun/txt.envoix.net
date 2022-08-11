@@ -2,11 +2,8 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
-import {
-  ARTICLE_DATABASE_ID,
-  notionClient,
-  ROOT_PAGE_ID,
-} from "../libs/notionClient";
+import { getArticles } from "../features/article/api/getArticleDetail";
+import { notionClient, ROOT_PAGE_ID } from "../libs/notionClient";
 import { BlockObject, PageObject } from "../types/notion";
 
 type SiteData = {
@@ -96,16 +93,7 @@ export const getStaticProps = async () => {
 
   // article list
   const articlesData: ArticleData[] = [];
-
-  const articles = await client.databases.query({
-    database_id: ARTICLE_DATABASE_ID,
-    sorts: [
-      {
-        property: "PublishedAt",
-        direction: "descending",
-      },
-    ],
-  });
+  const articles = await getArticles();
 
   (articles.results as PageObject[]).forEach((o) => {
     const publishedAt =
