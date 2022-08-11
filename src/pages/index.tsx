@@ -2,9 +2,9 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
-import { getArticles } from '../features/article/api/getArticleDetail';
-import { notionClient, ROOT_PAGE_ID } from '../libs/notionClient';
-import { BlockObject, PageObject } from '../types/notion';
+import { BlockObject, PageObject } from '@/types/notion';
+import { notionClient, ROOT_PAGE_ID } from '@/libs/notionClient';
+import { getArticles } from '@/features/article/api/getArticleDetail';
 
 type SiteData = {
   title: string;

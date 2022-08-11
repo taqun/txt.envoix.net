@@ -1,18 +1,18 @@
-import { ARTICLE_DATABASE_ID, notionClient } from "../../../libs/notionClient";
+import { ARTICLE_DATABASE_ID, notionClient } from '@/libs/notionClient';
 
 export const getArticles = async () => {
   const articles = await notionClient.databases.query({
     database_id: ARTICLE_DATABASE_ID,
     sorts: [
       {
-        property: "PublishedAt",
-        direction: "descending",
+        property: 'PublishedAt',
+        direction: 'descending',
       },
     ],
     filter: {
-      property: "Status",
+      property: 'Status',
       select: {
-        equals: "Published",
+        equals: 'Published',
       },
     },
   });
@@ -21,12 +21,12 @@ export const getArticles = async () => {
 };
 
 export const getArticleID = async (slug: string | string[] | undefined) => {
-  if (typeof slug !== "string") return null;
+  if (typeof slug !== 'string') return null;
 
   const articles = await notionClient.databases.query({
     database_id: ARTICLE_DATABASE_ID,
     filter: {
-      property: "Slug",
+      property: 'Slug',
       rich_text: {
         equals: slug,
       },

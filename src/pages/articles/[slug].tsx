@@ -1,13 +1,10 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
-import {
-  getArticleID,
-  getBlockChildren,
-} from '../../features/article/api/getArticleDetail';
-import { ArticleBlock } from '../../features/article/components/ArticleBlock';
-import { ArticleListBlocks } from '../../features/article/components/ArticleListBlocks';
-import { BlockObject } from '../../types/notion';
-import { getLists, isListBlock } from '../../utils/notion';
+import { BlockObject } from '@/types/notion';
+import { getArticleID, getBlockChildren } from '@/features/article/api/getArticleDetail';
+import { ArticleBlock } from '@/features/article/components/ArticleBlock';
+import { ArticleListBlocks } from '@/features/article/components/ArticleListBlocks';
+import { getLists, isListBlock } from '@/utils/notion';
 
 type ArticlePageProps = {
   blocks: BlockObject[];

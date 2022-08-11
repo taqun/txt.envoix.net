@@ -1,4 +1,4 @@
-import { BlockObject } from '../types/notion';
+import { BlockObject } from '@/types/notion';
 
 export const isListBlock = (block: BlockObject): boolean => {
   return block.type === 'bulleted_list_item' || block.type === 'numbered_list_item';
