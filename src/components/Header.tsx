@@ -1,12 +1,14 @@
 import { FC } from 'react';
 import Link from 'next/link';
 
+import styles from './Header.module.scss';
+
 export const Header: FC = () => {
   return (
-    <header>
-      <h1>
+    <header className={styles.container}>
+      <p className={styles.siteTitle}>
         <Link href="/">txt.envoix.net</Link>
-      </h1>
+      </p>
     </header>
   );
 };

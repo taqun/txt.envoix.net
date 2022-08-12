@@ -5,48 +5,30 @@ import Link from 'next/link';
 import { BlockObject, PageObject } from '@/types/notion';
 import { notionClient, ROOT_PAGE_ID } from '@/libs/notionClient';
 import { getArticles } from '@/features/article/api/getArticleDetail';
+import { IndexList } from '@/features/index/components/IndexList';
+import { IndexListItemData } from '@/features/index/components/IndexListItem';
 
 type SiteData = {
   title: string;
   url: string;
 };
 
-type ArticleData = {
-  id: string;
-  slug: string;
-  publishedAt: string;
-  title: string;
-};
-
 type IndexPageProps = {
   site: SiteData;
-  articles: ArticleData[];
+  articles: IndexListItemData[];
 };
 
 const IndexPage: NextPage<IndexPageProps> = ({ site, articles }) => {
   return (
-    <div>
+    <>
       <Head>
         <title>{site.title}</title>
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <ul>
-          {articles.map((article) => {
-            return (
-              <li key={article.id}>
-                <time dateTime={new Date(article.publishedAt).toISOString()}>
-                  {article.publishedAt}
-                </time>
-                <Link href={'/articles/' + article.slug}>{article.title}</Link>
-              </li>
-            );
-          })}
-        </ul>
-      </main>
-    </div>
+      <IndexList articles={articles} />
+    </>
   );
 };
 
@@ -92,7 +74,7 @@ export const getStaticProps = async () => {
   }
 
   // article list
-  const articlesData: ArticleData[] = [];
+  const articlesData: IndexListItemData[] = [];
   const articles = await getArticles();
 
   (articles.results as PageObject[]).forEach((o) => {
