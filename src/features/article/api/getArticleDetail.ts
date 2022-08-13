@@ -1,3 +1,4 @@
+import { PageObject } from '@/types/notion';
 import { ARTICLE_DATABASE_ID, notionClient } from '@/libs/notionClient';
 
 export const getArticles = async () => {
@@ -20,7 +21,9 @@ export const getArticles = async () => {
   return articles;
 };
 
-export const getArticleID = async (slug: string | string[] | undefined) => {
+export const getArticle = async (
+  slug: string | string[] | undefined
+): Promise<PageObject | null> => {
   if (typeof slug !== 'string') return null;
 
   const articles = await notionClient.databases.query({
@@ -33,7 +36,7 @@ export const getArticleID = async (slug: string | string[] | undefined) => {
     },
   });
 
-  return articles.results[0] != null ? articles.results[0].id : null;
+  return articles.results[0] as PageObject;
 };
 
 export const getBlockChildren = async (blockId: string) => {

@@ -1,42 +1,56 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
-import { BlockObject } from '@/types/notion';
-import { getArticleID, getBlockChildren } from '@/features/article/api/getArticleDetail';
-import { ArticleBlock } from '@/features/article/components/ArticleBlock';
-import { ArticleListBlocks } from '@/features/article/components/ArticleListBlocks';
-import { getLists, isListBlock } from '@/utils/notion';
+import {
+  getArticle,
+  getBlockChildren,
+} from '@/features/article/api/getArticleDetail';
+import {
+  ArticleHeader,
+  ArticleHeaderProps,
+} from '@/features/article/components/ArticleHeader';
+import {
+  ArticleContent,
+  ArticleContentProps,
+} from '@/features/article/components/ArticleContent';
 
 type ArticlePageProps = {
-  blocks: BlockObject[];
+  data: ArticleHeaderProps & ArticleContentProps;
 };
 
-const ArticlePage: NextPage<ArticlePageProps> = ({ blocks }) => {
+const ArticlePage: NextPage<ArticlePageProps> = ({ data }) => {
+  if (!data) return <div>loading...</div>;
+
   return (
-    <div>
-      {blocks?.map((block, i) => {
-        if (isListBlock(block)) {
-          const prevBlock = blocks[i - 1];
-          if (i === 0 || !isListBlock(prevBlock)) {
-            const listBlocks = getLists(blocks, i);
-            return <ArticleListBlocks key={block.id} blocks={listBlocks} />;
-          }
-        } else {
-          return <ArticleBlock key={block.id} block={block} />;
-        }
-      })}
-    </div>
+    <article>
+      <ArticleHeader {...data} />
+      <ArticleContent blocks={data.blocks} />
+    </article>
   );
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const articleId = await getArticleID(params?.slug);
-  if (articleId == null) return { props: {} };
+  const article = await getArticle(params?.slug);
+  if (article == null) return { props: {} };
 
-  const blocks = await getBlockChildren(articleId);
+  const title =
+    article.properties['Title'].type === 'title'
+      ? article.properties['Title'].title[0]?.plain_text
+      : null;
+
+  const publishedAt =
+    article.properties['PublishedAt'].type === 'date'
+      ? article.properties['PublishedAt'].date?.start
+      : null;
+
+  const blocks = await getBlockChildren(article.id);
 
   return {
     props: {
-      blocks: blocks.results,
+      data: {
+        title,
+        publishedAt,
+        blocks: blocks.results,
+      },
     },
   };
 };
